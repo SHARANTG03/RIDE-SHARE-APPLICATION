@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Care Chatbot</title>
+    <style>
+        /* Full-screen Chatbot Styling */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+        }
+
+        #chatbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border: none;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .chat-header {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: calc(100% - 100px); /* To accommodate header and input area */
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .bot-message {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+            border: 1px solid #ccc;
+        }
+
+        .user-message {
+            background-color: #007BFF;
+            color: white;
+            align-self: flex-end;
+        }
+
+        #user-message {
+            width: calc(100% - 100px);
+            padding: 15px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        #send-message {
+            padding: 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px;
+        }
+
+        #send-message:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Chatbot Container -->
+<div id="chatbox">
+    <div class="chat-header">
+        <span>Customer Support</span>
+        <button id="close-chat">X</button>
+    </div>
+    <div id="messages" class="chat-messages">
+        <div class="message bot-message">
+            <p>Hi, how can I help you today?</p>
+        </div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="user-message" placeholder="Type your message here...">
+        <button id="send-message">Send</button>
+    </div>
+</div>
+
+<script>
+    // Show the chatbox when the page loads
+    window.onload = function() {
+        document.getElementById("chatbox").style.display = "flex";
+    };
+
+    // Close chatbox functionality
+    document.getElementById("close-chat").addEventListener("click", function() {
+        document.getElementById("chatbox").style.display = "none";
+    });
+
+    // Send message functionality
+    document.getElementById("send-message").addEventListener("click", sendMessage);
+
+    async function sendMessage() {
+        const userMessage = document.getElementById("user-message").value;
+        if (userMessage.trim() === "") return;
+
+        // Append user message to chat window
+        const userMessageElement = document.createElement("div");
+        userMessageElement.classList.add("message", "user-message");
+        userMessageElement.innerHTML = `<p>${userMessage}</p>`;
+        document.getElementById("messages").appendChild(userMessageElement);
+
+        // Clear the input field
+        document.getElementById("user-message").value = "";
+
+        // Simulate bot response after a short delay
+        setTimeout(() => {
+            const botMessageElement = document.createElement("div");
+            botMessageElement.classList.add("message", "bot-message");
+            botMessageElement.innerHTML = `<p>Sorry, I didn't understand that. Can you please rephrase?</p>`;
+            document.getElementById("messages").appendChild(botMessageElement);
+
+            // Scroll to the bottom after new message
+            const messagesContainer = document.getElementById("messages");
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 1000);
+        
+        // Scroll to the bottom after sending a message
+        const messagesContainer = document.getElementById("messages");
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
