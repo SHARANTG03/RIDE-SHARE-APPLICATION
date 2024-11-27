@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Tracking</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        #map {
+            width: 100%;
+            height: 400px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .payment-button, .cancel-button, .customer-care-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .payment-button {
+            background-color: #28a745;
+        }
+        .cancel-button {
+            background-color: #ff4d4d;
+        }
+        .customer-care-button {
+            background-color: #007bff;
+        }
+        #confirmation-popup, #overlay {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            z-index: 1000;
+        }
+        #overlay {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Track Your Ride</h2>
+    <form action="/bride" method="dialog"></form>
+    <p class="message">The driver is on the way to reach you!</p>
+    <div id="map"></div>
+    <button class="payment-button" onclick="proceedToPayment()">Proceed to Payment</button>
+    <button class="cancel-button" onclick="showCancelConfirmation()">Cancel Ride</button>
+    <button class="customer-care-button" onclick="contactCustomerCare()">Contact Customer Care</button>
+</div>
+
+<!-- Confirmation Popup -->
+<div id="overlay"></div>
+<div id="confirmation-popup">
+    <p>Are you sure you want to cancel the ride?</p>
+    <button onclick="cancelRide()">Yes</button>
+    <button onclick="hideCancelConfirmation()">No</button>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    // Set the map view on Chennai
+    var map = L.map('map').setView([13.0827, 80.2707], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Generate a random driver location within Chennai bounds
+    function getRandomDriverLocation() {
+        const lat = 13.04 + (Math.random() * 0.08); // Rough latitude range for Chennai
+        const lon = 80.20 + (Math.random() * 0.08); // Rough longitude range for Chennai
+        return [lat, lon];
+    }
+
+    // Get pickup location from URL parameters (or from a backend in a real app)
+    const urlParams = new URLSearchParams(window.location.search);
+    const pickupLat = parseFloat(urlParams.get("pickupLat")) || 13.0827; // default to Chennai
+    const pickupLon = parseFloat(urlParams.get("pickupLon")) || 80.2707;
+
+    // Initial locations
+    const driverLocation = getRandomDriverLocation();
+    const pickupLocation = [pickupLat, pickupLon];
+
+    const driverMarker = L.marker(driverLocation).addTo(map)
+        .bindPopup("Driver Location")
+        .openPopup();
+
+    const pickupMarker = L.marker(pickupLocation).addTo(map)
+        .bindPopup("Pickup Location");
+
+    // Fit map to show both markers
+    map.fitBounds([driverLocation, pickupLocation]);
+
+    // Function to animate the driver marker moving toward the pickup location
+    function animateDriver() {
+        const speed = 0.0001; // Adjust this value to control the speed of movement
+
+        let lat = driverLocation[0];
+        let lon = driverLocation[1];
+
+        function moveMarker() {
+            const distanceLat = pickupLocation[0] - lat;
+            const distanceLon = pickupLocation[1] - lon;
+
+            if (Math.abs(distanceLat) < 0.0001 && Math.abs(distanceLon) < 0.0001) {
+                driverMarker.setLatLng(pickupLocation);
+                return; // Stop when close enough
+            }
+
+            lat += distanceLat * speed;
+            lon += distanceLon * speed;
+
+            driverMarker.setLatLng([lat, lon]);
+            requestAnimationFrame(moveMarker);
+        }
+        
+        moveMarker();
+    }
+
+    // Start the animation
+    animateDriver();
+
+    // Redirect to payment page
+    function proceedToPayment() {
+        window.location.href = "/payment";
+    }
+
+    // Cancel ride confirmation
+    function showCancelConfirmation() {
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("confirmation-popup").style.display = "block";
+    }
+
+    function hideCancelConfirmation() {
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("confirmation-popup").style.display = "none";
+    }
+
+    function cancelRide() {
+        hideCancelConfirmation();
+        alert("Your ride has been canceled.");
+        window.location.href='/ridebooking'
+        // Further cancellation logic can be added here if needed
+    }
+
+    // Function to handle the Customer Care button click
+    function contactCustomerCare() {
+        // Here you could open a form or send an email, for now let's just alert
+        alert("Redirecting you to customer care...");
+
+        // Example of redirecting to a customer care page
+        window.location.href = "/customercare"; // Replace with the actual page URL
+    }
+</script>
+
+</body>
+</html>

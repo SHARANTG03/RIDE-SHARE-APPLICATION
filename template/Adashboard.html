@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin's Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .dashboard-container {
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .dashboard-header {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .dashboard-button {
+            background-color: #007bff;
+            color: #ffffff;
+            width: 220px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .dashboard-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-5px);
+        }
+        .dashboard-button:active {
+            transform: translateY(0);
+        }
+        .dashboard-button-icon {
+            display: block;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h1 class="dashboard-header">Admin's Dashboard</h1>
+    <form action="/Adashboard" method="get"></form>
+
+    <div class="button-grid">
+        <a href="/usermanagement" class="dashboard-button">
+            <span>User Management</span>
+        </a>
+        <a href="/ridemonitoring" class="dashboard-button">
+            <span>Ride Monitoring</span>
+        </a>
+        <a href="/reports" class="dashboard-button">
+            <span>Reports</span>
+        </a>
+        <a href="/issuemanagement" class="dashboard-button">
+            <span>Issue Management</span>
+        </a>
+        <a href="/policymanagement" class="dashboard-button">
+            <span>Policy Management</span>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

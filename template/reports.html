@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .reports-container {
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .reports-header {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .filter-section, .chart-section, .download-section {
+            margin-bottom: 20px;
+        }
+        .filter-section label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .filter-section select, .filter-section button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+        .filter-section button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .filter-section button:hover {
+            background-color: #0056b3;
+        }
+        .chart-section canvas {
+            width: 100%;
+            max-width: 1000px;
+            height: 400px;
+        }
+        .download-section button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .download-section button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="reports-container">
+    <h1 class="reports-header">Reports</h1>
+    <form action="/reports"></form>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <h2>Generate Report</h2>
+        <label for="report-type">Report Type:</label>
+        <select id="report-type">
+            <option value="ride-usage">Ride Usage</option>
+            <option value="cost-savings">Cost Savings</option>
+            <option value="environmental-impact">Environmental Impact</option>
+        </select>
+        
+        <label for="report-period">Period:</label>
+        <select id="report-period">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+        
+        <button onclick="generateReport()">Generate Report</button>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="chart-section">
+        <h2>Report Chart</h2>
+        <canvas id="reportChart"></canvas>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section">
+        <h2>Download Report</h2>
+        <button onclick="downloadReport()">Download PDF</button>
+        <button onclick="downloadCSV()">Download CSV</button>
+    </div>
+</div>
+
+<script>
+    // Initialize chart
+    var ctx = document.getElementById('reportChart').getContext('2d');
+    var reportChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Data',
+                data: [10, 20, 30, 40, 50, 60],
+                backgroundColor: '#007bff'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Function to update chart data based on report type and period
+    function generateReport() {
+        var reportType = document.getElementById('report-type').value;
+        var reportPeriod = document.getElementById('report-period').value;
+        
+        // Dummy data update based on selections (for demonstration)
+        var data = reportType === 'ride-usage' ? [15, 25, 35, 45, 55, 65] :
+                   reportType === 'cost-savings' ? [5, 15, 25, 35, 45, 55] :
+                   [10, 20, 10, 20, 10, 20];
+        
+        reportChart.data.datasets[0].data = data;
+        reportChart.data.datasets[0].label = reportType.replace('-', ' ').toUpperCase();
+        reportChart.update();
+    }
+
+    // Download functions (placeholders for actual backend integration)
+    function downloadReport() {
+        alert("PDF download functionality would be implemented here.");
+    }
+
+    function downloadCSV() {
+        alert("CSV download functionality would be implemented here.");
+    }
+</script>
+
+</body>
+</html>

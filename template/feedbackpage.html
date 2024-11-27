@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .rating {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .star {
+            font-size: 30px;
+            cursor: pointer;
+            color: #ccc;
+        }
+
+        .star.selected {
+            color: #f39c12;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Provide Your Feedback</h2>
+        <form action="/feedback"></form>
+        <div class="rating" id="rating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <textarea placeholder="Leave your comments here (optional)"></textarea>
+        <button class="submit-button" onclick="submitFeedback()">Submit Feedback</button>
+        <div id="confirmationMessage" style="text-align: center; margin-top: 20px; display: none; color: #28a745; font-weight: bold;">Thank you for your feedback!</div>
+    </div>
+
+    <script>
+        // Handle star selection
+        const stars = document.querySelectorAll('.star');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                stars.forEach(s => s.classList.remove('selected'));
+                star.classList.add('selected');
+                for (let i = 0; i < star.dataset.value; i++) {
+                    stars[i].classList.add('selected');
+                }
+            });
+        });
+
+        function submitFeedback() {
+            // Display a confirmation message when the feedback is submitted
+            document.getElementById('confirmationMessage').style.display = 'block';
+            //window.location.href='/ddashboard'
+            setTimeout(() => {
+        // Example: Redirecting to the next page (change the URL as needed)
+            window.location.href = '/ddashboard'; // Replace with your actual page URL
+        }, 3000); // 2000 milliseconds = 2 seconds
+        }
+    </script>
+</body>
+</html>

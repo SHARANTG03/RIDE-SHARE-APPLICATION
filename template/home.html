@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideShare Application</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+            position: absolute;
+            top: 0;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 80px; /* Space for header */
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .button-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .button-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 150px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        RideShare Application
+    </div>
+
+    <div class="container">
+        <h1>Welcome!</h1>
+        <form action="/home"  method="post"></form>
+        <div class="button-group">
+            <!-- Rider Button -->
+            <div class="button-item">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs1o1ygD4ywhiq5M72xV91zAzI_gFmPjYZpQ&s" alt="Rider Icon">
+                <button class="btn" onclick="window.location.href='/riderlogin'">Rider</button>
+            </div>
+            
+            <!-- Driver Button -->
+            <div class="button-item">
+                <img src="https://w7.pngwing.com/pngs/217/72/png-transparent-bus-driver-computer-icons-driving-driving-logo-monochrome-school-bus-thumbnail.png" alt="Driver Icon">
+                <button class="btn" onclick="window.location.href='/driverlogin'">Driver</button>
+            </div>
+            
+            <!-- Admin Button -->
+            <div class="button-item">
+                <img src="https://wallpapers.com/images/featured/admin-png-2ic0yzgeefmj9okw.jpg" alt="Admin Icon">
+                <button class="btn" onclick="window.location.href='/adminlogin'">Admin</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

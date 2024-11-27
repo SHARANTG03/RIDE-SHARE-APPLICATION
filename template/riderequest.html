@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Requests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .request {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .request:last-child {
+            border-bottom: none;
+        }
+
+        .request-details {
+            flex-grow: 1;
+        }
+
+        .request h3 {
+            margin: 0 0 5px;
+            color: #333;
+        }
+
+        .request p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-approve {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .btn-approve:hover {
+            background-color: #218838;
+        }
+
+        .btn-reject {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-reject:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Ride Requests</h2>
+        <form action="/driderrequest"></form>
+        <div class="request">
+            <div class="request-details">
+                <h3>Sharan</h3>
+                <p>Pickup Location: Chennai</p>
+                <p>Drop-off Location: Egmore</p>
+                <p>Time: 10:30 AM, Nov 15</p>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-approve" onclick="handleApprove('Sharan')">Approve</button>
+                <button class="btn btn-reject" onclick="handleReject('Sharan')">Reject</button>
+            </div>
+        </div>
+
+        <div class="request">
+            <div class="request-details">
+                <h3>Sharon</h3>
+                <p>Pickup Location: Avadi</p>
+                <p>Drop-off Location: Pattabiram</p>
+                <p>Time: 2:00 PM, Nov 16</p>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-approve" onclick="handleApprove('Sharon')">Approve</button>
+                <button class="btn btn-reject" onclick="handleReject('Sharon')">Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleApprove(riderName) {
+           // alert(`Approved ride request for ${riderName}`);
+            window.location.href='/tripdetailpage'
+        }
+
+        function handleReject(riderName) {
+            alert(`Rejected ride request for ${riderName}`);
+            window.location.href='/ddashboard'
+            // Implement rejection logic here
+        }
+    </script>
+</body>
+</html>

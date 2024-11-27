@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Profile - Ride Sharing</title>
+    <style>
+        /* Basic resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Profile container styling */
+.profile-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header section */
+.profile-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile-header h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.user-email {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.edit-profile-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Profile sections */
+section {
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Account details */
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Trip history */
+.trip-history ul {
+    list-style: none;
+}
+
+.trip-history li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+/* Payment methods */
+.payment-methods .payment-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.remove-btn, .add-payment-btn, .settings-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+/* Settings section */
+.profile-settings {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <form action="/rprofile" method="post"></form>
+    <!-- Profile Header -->
+    <header class="profile-header">
+        <!-- <img src="profile-picture.jpg" alt="Profile Picture" class="profile-picture"> -->
+        <h2>SHARAN T G</h2>
+        <p class="user-email">sharantg</p>
+        <button class="edit-profile-btn">Edit Profile</button>
+    </header>
+
+    <!-- Profile Sections -->
+    <section class="profile-details">
+        <h3>Account Details</h3>
+        <div class="detail-item">
+            <span>Phone:</span>
+            <span>+917904499758</span>
+        </div>
+        <div class="detail-item">
+            <span>Email:</span>
+            <span>sharantg_ai21@velhightech.com</span>
+        </div>
+        <div class="detail-item">
+            <span>Joined:</span>
+            <span>January 2024</span>
+        </div>
+    </section>
+
+    <!-- Trip History Section -->
+    <section class="trip-history">
+        <h3>Trip History</h3>
+        <ul>
+            <li>
+                <span>Destination:</span> Main city <br>
+                <span>Date:</span> Oct 15, 2024 <br>
+                <span>Price:</span> ₹150.00
+            </li>
+            <li>
+                <span>Destination:</span> Airport <br>
+                <span>Date:</span> Sep 22, 2024 <br>
+                <span>Price:</span> ₹300.00
+            </li>
+            <!-- Additional trips can be added here -->
+        </ul>
+    </section>
+
+    <!-- Payment Methods Section -->
+    <section class="payment-methods">
+        <h3>Payment Methods</h3>
+        <div class="payment-item">
+            <span>Visa ending in 1234</span>
+            <button class="remove-btn">Remove</button>
+        </div>
+        <div class="payment-item">
+            <span>Paytm</span>
+            <button class="remove-btn">Remove</button>
+        </div>
+        <button class="add-payment-btn">Add Payment Method</button>
+    </section>
+
+    <!-- Settings Section -->
+    <section class="profile-settings">
+        <h3>Settings</h3>
+        <button class="settings-btn">Change Password</button>
+        <button class="settings-btn">Manage Notifications</button>
+        <button class="settings-btn">Delete Account</button>
+    </section>
+</div>
+
+</body>
+</html>

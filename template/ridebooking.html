@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Booking</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 80%;
+            max-width: 1000px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #007bff;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            font-size: 20px;
+        }
+        .profile-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            margin-left: 15px;
+            border: 2px solid #fff;
+        }
+        .profile-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .form-section {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .form-section h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #map {
+            flex: 1;
+            height: 500px;
+            border-radius: 8px;
+        }
+        .fare-info {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h1>Go anywhere with Us</h1>
+            <form action="/ridebooking" method="get"></form>
+            <div class="form-group">
+                <label for="pickup">Pickup location</label>
+                <input type="text" id="pickup" placeholder="Enter pickup location">
+            </div>
+            <div class="form-group">
+                <label for="dropoff">Dropoff location</label>
+                <input type="text" id="dropoff" placeholder="Enter dropoff location">
+            </div>
+            <div class="button-container">
+                <button onclick="showRoute()">Show Route</button>
+                <button onclick="window.location.href='/bride'">Book ride</button>
+            </div>
+            <div class="fare-info">
+                <strong>Distance:</strong> <span id="distance">0</span> km<br>
+                <strong>Estimated Fare:</strong> ₹<span id="fare">0</span>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div id="map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([13.0827, 80.2707], 11); // Coordinates for Chennai
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        var pickupMarker, dropoffMarker;
+
+        // Function to calculate fare based on distance
+        function calculateFare(distance) {
+            const farePerKm = 15.5; // Example fare rate per kilometer
+            return (distance * farePerKm).toFixed(2);
+        }
+
+        // Function to set markers based on location input and calculate distance/fare
+        function showRoute() {
+            var pickup = document.getElementById("pickup").value;
+            var dropoff = document.getElementById("dropoff").value;
+
+            if (pickup && dropoff) {
+                // Use OpenStreetMap's Nominatim API to geocode the locations
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(pickup)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            var pickupLocation = [data[0].lat, data[0].lon];
+                            if (pickupMarker) map.removeLayer(pickupMarker); // Remove existing marker if any
+                            pickupMarker = L.marker(pickupLocation).addTo(map)
+                                .bindPopup("Pickup Location: " + pickup)
+                                .openPopup();
+                            map.setView(pickupLocation, 12);
+                        } else {
+                            alert("Pickup location not found.");
+                        }
+                    });
+
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dropoff)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            var dropoffLocation = [data[0].lat, data[0].lon];
+                            if (dropoffMarker) map.removeLayer(dropoffMarker); // Remove existing marker if any
+                            dropoffMarker = L.marker(dropoffLocation).addTo(map)
+                                .bindPopup("Dropoff Location: " + dropoff)
+                                .openPopup();
+                            map.fitBounds([pickupMarker.getLatLng(), dropoffMarker.getLatLng()]);
+
+                            // Calculate the distance and update the fare
+                            var distance = (pickupMarker.getLatLng().distanceTo(dropoffMarker.getLatLng()) / 1000).toFixed(2); // in km
+                            document.getElementById("distance").innerText = distance;
+                            document.getElementById("fare").innerText = calculateFare(distance);
+                        } else {
+                            alert("Dropoff location not found.");
+                        }
+                    });
+            } else {
+                alert("Please enter both pickup and dropoff locations.");
+            }
+        }
+    </script>
+
+<div class="header">
+    Welcome, User
+    <div class="profile-button" onclick="goToProfile()">
+        <img src="https://staticg.sportskeeda.com/editor/2022/08/53e15-16596004347246.png?w=640" alt="Profile Image">
+    </div>
+</div>
+
+
+<script>
+    function goToProfile() {
+        // Redirect to the profile page
+        window.location.href = "/rprofile";
+    }
+</script>
+
+</body>
+</html>

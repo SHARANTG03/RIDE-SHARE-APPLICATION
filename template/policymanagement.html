@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Management Page</title>
+    <style>
+        /* Basic styling and layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        .content {
+            display: flex;
+            gap: 20px;
+        }
+        /* Policy list styling */
+        .policy-list {
+            flex: 1;
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        .policy-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .policy-item.active {
+            background-color: #dcedc8;
+        }
+        .compliance-indicator {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .compliance-compliant { background-color: #4caf50; }
+        .compliance-noncompliant { background-color: #f44336; }
+        /* Policy details and edit tools */
+        .policy-details {
+            flex: 2;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .policy-details h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .policy-details p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        .edit-section label {
+            font-size: 14px;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .edit-section textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Policy Management</h1>
+            <form action="/policymanagement"></form>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Policy List Section -->
+            <div class="policy-list" id="policyList">
+                <h2>Policies</h2>
+                <!-- Policy items will be populated here dynamically -->
+            </div>
+
+            <!-- Policy Details and Edit Section -->
+            <div class="policy-details" id="policyDetails">
+                <h2>Policy Details</h2>
+                <p>Select a policy to view and edit details.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for policies
+        const policies = [
+            { id: 1, title: 'Driver Background Check', description: 'Ensure all drivers pass a background check.', compliance: 'compliant' },
+            { id: 2, title: 'Vehicle Inspection', description: 'Vehicles must pass a safety inspection every 6 months.', compliance: 'noncompliant' },
+            { id: 3, title: 'Passenger Safety Guidelines', description: 'Ensure all passengers follow safety guidelines.', compliance: 'compliant' }
+        ];
+
+        // Function to render policy list
+        function renderPolicyList() {
+            const policyList = document.getElementById('policyList');
+            policyList.innerHTML = '<h2>Policies</h2>'; // Clear previous content
+
+            policies.forEach(policy => {
+                const policyItem = document.createElement('div');
+                policyItem.className = 'policy-item';
+                policyItem.innerHTML = `
+                    <div>${policy.title}</div>
+                    <div class="compliance-indicator compliance-${policy.compliance}">
+                        ${policy.compliance === 'compliant' ? 'Compliant' : 'Non-Compliant'}
+                    </div>
+                `;
+                policyItem.onclick = () => showPolicyDetails(policy);
+                policyList.appendChild(policyItem);
+            });
+        }
+
+        // Function to show policy details and enable editing
+        function showPolicyDetails(policy) {
+            const policyDetails = document.getElementById('policyDetails');
+            policyDetails.innerHTML = `
+                <h2>${policy.title}</h2>
+                <p>${policy.description}</p>
+                <div class="edit-section">
+                    <label for="editDescription">Edit Policy Description:</label>
+                    <textarea id="editDescription">${policy.description}</textarea>
+                    <button class="button" onclick="updatePolicy(${policy.id})">Save Changes</button>
+                </div>
+            `;
+        }
+
+        // Function to update policy description
+        function updatePolicy(id) {
+            const newDescription = document.getElementById('editDescription').value;
+            const policy = policies.find(policy => policy.id === id);
+            policy.description = newDescription;
+            alert(`Policy "${policy.title}" has been updated.`);
+            renderPolicyList(); // Refresh the policy list
+        }
+
+        // Initial render
+        renderPolicyList();
+    </script>
+</body>
+</html>

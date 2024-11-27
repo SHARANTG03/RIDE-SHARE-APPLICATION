@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Details</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <style>
+        /* Ensure the body and html fill the entire screen */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+
+        /* Map Container */
+        #map {
+            height: 60vh; /* Take 60% of the viewport height */
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Status Container */
+        .status-container {
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            flex-grow: 1; /* Ensures it takes up remaining space */
+            overflow-y: auto; /* Allow scrolling within status container if needed */
+        }
+
+        .status {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .status p {
+            margin: 0;
+            color: #333;
+        }
+
+        .indicator {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        /* Button to close the ride */
+        .close-ride-btn {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            position: fixed;
+            bottom: 20px; /* Fixed to the bottom of the viewport */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .close-ride-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Trip Details</h1>
+        <form action="/tripdetailpage"></form>
+    </div>
+
+    <!-- Map container -->
+    <div id="map"></div>
+
+    <!-- Status container -->
+    <div class="status-container">
+        <div class="status">
+            <p>Pickup Point:</p>
+            <p id="pickup">Chennai</p>
+        </div>
+        <div class="status">
+            <p>Estimated Time of Arrival:</p>
+            <p id="eta">10:45 AM</p>
+        </div>
+        <div class="status">
+            <p>Current Status:</p>
+            <p class="indicator" id="rideStatus">On the way</p>
+        </div>
+    </div>
+
+    <!-- Close the Ride Button -->
+    <button class="close-ride-btn" onclick="closeRide()">Close the Ride</button>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script>
+        // Pickup location (hardcoded for now)
+        const pickupLocation = [13.0827, 80.2707]; // Example: 123 Main Street, Chennai
+
+        // Initialize the map centered around Chennai
+        const map = L.map('map').setView([13.0827, 80.2707], 14);
+
+        // Load and display the tile layer from OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Randomly initialize the driver's starting location within a small area
+        const randomLat = 13.0827 + (Math.random() - 0.5) * 0.01;
+        const randomLng = 80.2707 + (Math.random() - 0.5) * 0.01;
+        const driverStartLocation = [randomLat, randomLng];
+
+        // Add marker for the driver's initial location
+        const driverMarker = L.marker(driverStartLocation).addTo(map)
+            .bindPopup('Driver Location')
+            .openPopup();
+
+        // Add a marker for the pickup point
+        const pickupMarker = L.marker(pickupLocation).addTo(map)
+            .bindPopup('Pickup Location')
+            .openPopup();
+
+        // Create a route between the driver’s current position and the pickup point
+        const routeControl = L.Routing.control({
+            waypoints: [
+                L.latLng(driverStartLocation),
+                L.latLng(pickupLocation)
+            ],
+            routeWhileDragging: true
+        }).addTo(map);
+
+        // Fixed ETA (set as a fixed time for demonstration)
+        const fixedETA = new Date();
+        fixedETA.setMinutes(fixedETA.getMinutes() + 15); // 15 minutes from now
+        document.getElementById('eta').textContent = fixedETA.toLocaleTimeString();
+
+        // Simulate real-time updates for the driver's location
+        let currentPosition = L.latLng(driverStartLocation);
+        const speed = 0.0001; // Simulated movement per interval (this will move the driver towards pickup)
+
+        setInterval(() => {
+            // Simulate the movement of the driver towards the pickup point
+            const latDiff = pickupLocation[0] - currentPosition.lat;
+            const lngDiff = pickupLocation[1] - currentPosition.lng;
+            
+            if (Math.abs(latDiff) > 0.00001 || Math.abs(lngDiff) > 0.00001) {
+                currentPosition = L.latLng(
+                    currentPosition.lat + latDiff * speed,
+                    currentPosition.lng + lngDiff * speed
+                );
+
+                driverMarker.setLatLng(currentPosition);
+                routeControl.setWaypoints([currentPosition, pickupLocation]);
+            }
+        }, 1000); // Update every second
+
+        // Function to close the ride (could redirect to a summary page or perform other actions)
+        function closeRide() {
+            // You can redirect to a summary page or perform other actions when the ride is closed
+            //alert('Ride Closed!');
+            // Example of redirecting
+            window.location.href = '/paymentsummary'; 
+        }
+    </script>
+</body>
+</html>
